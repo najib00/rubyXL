@@ -42,7 +42,7 @@ module RubyXL
     define_attribute(:ph,  :bool, :default => false)
     define_child_node(RubyXL::Formula,   :accessor => :formula)
     define_child_node(RubyXL::CellValue, :accessor => :value_container)
-    define_child_node(RubyXL::InlineString, :accessor => :InlineString)
+    define_child_node(RubyXL::InlineString, :accessor => :inline_string)
     define_child_node(RubyXL::RichText)    # is
     define_element_name 'c'
 

@@ -19,6 +19,17 @@ module RubyXL
     end
   end
 
+  class InlineString < OOXMLObject
+    define_attribute(:_, :string, :accessor => :value)
+    define_attribute(:'xml:space', %w{ preserve })
+    define_element_name 'is'
+
+    def before_write_xml
+      preserve_whitespace
+      true
+    end
+  end
+
   # http://www.schemacentral.com/sc/ooxml/e-ssml_c-2.html
   class Cell < OOXMLObject
     NUMBER_REGEXP = /\A-?\d+((?:\.\d+)?(?:e[+-]?\d+)?)?\Z/i
@@ -31,6 +42,7 @@ module RubyXL
     define_attribute(:ph,  :bool, :default => false)
     define_child_node(RubyXL::Formula,   :accessor => :formula)
     define_child_node(RubyXL::CellValue, :accessor => :value_container)
+    define_child_node(RubyXL::InlineString, :accessor => :InlineString)
     define_child_node(RubyXL::RichText)    # is
     define_element_name 'c'
 
@@ -80,6 +92,7 @@ module RubyXL
 
       case datatype
       when RubyXL::DataType::SHARED_STRING then workbook.shared_strings_container[r.to_i].to_s
+      when RubyXL::DataType::INLINE_STRING then inline_string.value
       when RubyXL::DataType::RAW_STRING    then raw_value
       else
         if is_date? then workbook.num_to_date(r.to_f)
